@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { CopyButton } from '@web-tools/ui'
 import { type OutputFormat } from '../lib/format'
 
 interface OutputDisplayProps {
@@ -12,16 +12,6 @@ interface OutputDisplayProps {
 const FORMATS: OutputFormat[] = ['hex', 'HEX', 'base64']
 
 export function OutputDisplay({ label, value, format, onFormatChange, placeholder }: OutputDisplayProps) {
-  const [copied, setCopied] = useState(false)
-
-  const handleCopy = () => {
-    if (!value) return
-    navigator.clipboard.writeText(value).then(() => {
-      setCopied(true)
-      setTimeout(() => setCopied(false), 2000)
-    })
-  }
-
   return (
     <div className="flex flex-col gap-1.5">
       <div className="flex items-center justify-between">
@@ -43,13 +33,7 @@ export function OutputDisplay({ label, value, format, onFormatChange, placeholde
             ))}
           </div>
         </div>
-        <button
-          className="text-xs text-text-secondary hover:text-accent transition-colors disabled:opacity-40 cursor-pointer"
-          onClick={handleCopy}
-          disabled={!value}
-        >
-          {copied ? '✓ Copied' : 'Copy'}
-        </button>
+        <CopyButton value={value} size="sm" />
       </div>
       <div
         className="bg-surface-800 border border-surface-700 rounded-lg p-3

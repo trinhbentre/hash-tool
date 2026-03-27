@@ -15,8 +15,8 @@ import { type Algorithm, computeHash, type HmacAlgorithm } from './lib/hash'
 import { type KeyFormat, computeHmac } from './lib/hmac'
 import { type OutputFormat } from './lib/format'
 import { detectAlgorithm } from './lib/detect-algorithm'
+import { useStorage } from '@web-tools/ui'
 import { useHashWorker } from './hooks/useHashWorker'
-import { useStorage } from './hooks/useStorage'
 
 const MAX_HISTORY = 20
 let historyIdCounter = 0
@@ -99,6 +99,8 @@ export default function App() {
       }
     }, 200)
     return () => { if (hmacDebounce.current) clearTimeout(hmacDebounce.current) }
+  // effectiveAlgorithm is derived from algorithm — only algorithm needed in deps
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hmacMessage, hmacSecret, hmacKeyFormat, algorithm, format, mode, addHistory])
 
   // Verify mode computation
@@ -173,7 +175,6 @@ export default function App() {
       setFileComputing(false)
       setFileProgress(null)
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [effectiveAlgorithm, format, hashInWorker, addHistory])
 
   const handleRestoreHistory = useCallback((entry: HistoryEntry) => {
@@ -181,7 +182,7 @@ export default function App() {
     setAlgorithm(entry.algorithm as Algorithm)
     if (entry.mode === 'hash') setHashInput(entry.input)
     else if (entry.mode === 'hmac') setHmacMessage(entry.input)
-  }, [])
+  }, [setMode, setAlgorithm])
 
   const outputLabel = mode === 'hmac' ? `HMAC-${algorithm}` : `${algorithm} Hash`
   const outputValue = mode === 'hash' ? hashResult : mode === 'hmac' ? hmacResult : fileHash
