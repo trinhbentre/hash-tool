@@ -9,7 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@web-tools/ui": "*",
+    "@web-tools/ui": "file:./web-tools-ui-1.0.0.tgz",
     "js-md5": "0.8.3",
     "js-sha1": "0.7.0",
     "js-sha256": "0.11.1",
